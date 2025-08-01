@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:madunia/features/app/presentation/view/widgets/custom_bottom_nav_bar_item.dart';
+import 'package:madunia/features/debit_report/presentation/view/pages/debit_screen.dart';
 import 'package:madunia/features/home/presentation/view/pages/home_screen.dart';
 part 'app_state.dart';
 
@@ -16,8 +17,8 @@ class AppCubit extends Cubit<AppState> {
       pageIndex: 0,
     ),
     CustomBottomNavBarItem(
-      pageIcon: Icons.video_call_outlined,
-      pageName: 'Videos',
+      pageIcon: Icons.money,
+      pageName: 'Debit Report',
       pageIndex: 1,
     ),
     CustomBottomNavBarItem(
@@ -34,10 +35,7 @@ class AppCubit extends Cubit<AppState> {
 
   static final List<Widget> pagesViews = [
    HomeScreen(),
-    Container(
-      color: Colors.transparent,
-      child: Center(child: const Text('Videos')),
-    ),
+    DebitScreen(),
     Container(
       color: Colors.transparent,
       child: Center(child: const Text('Youtube')),

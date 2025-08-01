@@ -41,7 +41,7 @@ showToastification({BuildContext? context, String? message}) {
     context: context, // optional if you use ToastificationWrapper
     title: Text(message!),
     animationDuration: const Duration(seconds: 2),
-    autoCloseDuration: const Duration(seconds: 2),
+    autoCloseDuration: const Duration(seconds: 3),
   );
 }
 
