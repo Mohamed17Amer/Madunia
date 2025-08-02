@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:madunia/core/helper/helper_funcs.dart';
+import 'package:madunia/core/utils/widgets/custom_icon.dart';
 
 class HomeCardItem extends StatelessWidget {
   const HomeCardItem({super.key});
@@ -37,7 +38,7 @@ class HomeCardItem extends StatelessWidget {
           SizedBox(height: 10),
           Align(
             alignment: Alignment.bottomLeft,
-            child: IconButton(onPressed: () {}, icon: Icon(Icons.copy_all)),
+            child: CustomIcon(icon: Icons.copy_all, onPressed: () {}),
           ),
         ],
       ),

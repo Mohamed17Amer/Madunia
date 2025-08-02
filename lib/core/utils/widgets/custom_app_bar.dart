@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:madunia/core/utils/colors/app_colors.dart';
 
-class DebitAppBar extends StatelessWidget {
-  const DebitAppBar({super.key});
+class CustomAppBar extends StatelessWidget {
+  final String title;
+  const CustomAppBar({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class DebitAppBar extends StatelessWidget {
       height: 80,
       child: Center(
         child: Text(
-          "كشف المديونية المستحقة عليك",
+          title,
           style: TextStyle(
             fontSize: 30,
             color: AppColors.bottomNavBarSelectedItemColor,

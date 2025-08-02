@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:madunia/features/app/presentation/view/widgets/custom_bottom_nav_bar_item.dart';
 import 'package:madunia/features/debit_report/presentation/view/pages/debit_screen.dart';
 import 'package:madunia/features/home/presentation/view/pages/home_screen.dart';
+import 'package:madunia/features/repair/presentation/view/pages/repair_request_screen.dart';
 part 'app_state.dart';
 
 class AppCubit extends Cubit<AppState> {
@@ -22,13 +23,13 @@ class AppCubit extends Cubit<AppState> {
       pageIndex: 1,
     ),
     CustomBottomNavBarItem(
-      pageIcon: Icons.video_library_outlined,
-      pageName: 'Youtube',
+      pageIcon: Icons.home_repair_service,
+      pageName: 'Repair Request',
       pageIndex: 2,
     ),
     CustomBottomNavBarItem(
-      pageIcon: Icons.book_outlined,
-      pageName: 'Books',
+      pageIcon: Icons.integration_instructions,
+      pageName: 'Sustainable instructions',
       pageIndex: 3,
     ),
   ];
@@ -36,9 +37,8 @@ class AppCubit extends Cubit<AppState> {
   static final List<Widget> pagesViews = [
    HomeScreen(),
     DebitScreen(),
-    Container(
-      color: Colors.transparent,
-      child: Center(child: const Text('Youtube')),
+    RepairRequestScreen(
+     
     ),
     Container(
       color: Colors.transparent,

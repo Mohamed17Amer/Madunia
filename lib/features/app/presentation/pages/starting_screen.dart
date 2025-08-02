@@ -16,32 +16,36 @@ class _StartingScreenState extends State<StartingScreen> {
   AppCubit appCubit = AppCubit();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-
-      body: Stack(
-        // for background and body
-        children: [
-          Container(
-            width: double.infinity,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: AppColors.homeGradientColorsList,
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+      
+        body: Stack(
+          // for background and body
+          children: [
+            Container(
+              height: double.infinity,
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: AppColors.homeGradientColorsList,
+                ),
+              ),
+      
+              child: BlocBuilder<AppCubit, AppState>(
+                builder: (context, state) {
+                  return AppCubit.pagesViews[AppCubit.currentIndex];
+                },
               ),
             ),
-
-            child: BlocBuilder<AppCubit, AppState>(
-              builder: (context, state) {
-                return AppCubit.pagesViews[AppCubit.currentIndex];
-              },
-            ),
-          ),
-
-          // for nav bar
-          CustomBottomNavBar(),
-        ],
+      
+            // for nav bar
+            CustomBottomNavBar(),
+          ],
+        ),
       ),
     );
   }
