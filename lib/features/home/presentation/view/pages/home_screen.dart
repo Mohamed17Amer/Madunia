@@ -13,17 +13,11 @@ class HomeScreen extends StatelessWidget {
         slivers: [
           // Top safe area spacing
           SliverToBoxAdapter(child: SafeArea(child: SizedBox(height: 20))),
-      
+
           // Profile section
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8),
-              child: HomeProfileSection(),
-            ),
-          ),
-      
+          SliverToBoxAdapter(child: HomeProfileSection()),
           SliverToBoxAdapter(child: SizedBox(height: 20)),
-      
+
           // Grid view section
           SliverToBoxAdapter(child: HomeCardsGridView()),
         ],

@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+
 part of 'home_cubit.dart';
 
 @immutable
@@ -6,26 +9,19 @@ sealed class HomeState {}
 // initial
 final class HomeInitial extends HomeState {}
 
-// filter
-final class HomeChangeFilterIndexState extends HomeState {
-  final int filterIndex;
-  HomeChangeFilterIndexState({required this.filterIndex}) {
-    log("filterIndex: $filterIndex ");
+final class CopyTotalToClipboardSuccess extends HomeState {
+  final double total;
+  CopyTotalToClipboardSuccess(this.total) {
+    log("home_cubit   total = $total ");
   }
 }
 
-// shorts
-final class HomeChangeShortsIndexState extends HomeState {
-  final int shortsIndex;
-  HomeChangeShortsIndexState({required this.shortsIndex}) {
-    log("shortsIndex: $shortsIndex ");
-  }
-}
 
-// audio
-class HomeChangeAudioIndexState extends HomeState {
-  final int audioIndex;
-  HomeChangeAudioIndexState({required this.audioIndex}) {
-    log("audioIndex: $audioIndex ");
-  }
+final class CopyTotalToClipboardFailure extends HomeState {
+  final  String errorMesg;
+  CopyTotalToClipboardFailure(this.errorMesg)
+     {
+      log ("home_cubit   errorMesg = $errorMesg ");
+    }
+
 }

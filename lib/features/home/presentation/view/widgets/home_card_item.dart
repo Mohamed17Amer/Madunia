@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:madunia/core/helper/helper_funcs.dart';
 import 'package:madunia/core/utils/widgets/custom_icon.dart';
+import 'package:madunia/core/utils/widgets/custom_txt.dart';
 
 class HomeCardItem extends StatelessWidget {
   const HomeCardItem({super.key});
@@ -21,24 +22,29 @@ class HomeCardItem extends StatelessWidget {
         children: [
           Align(
             alignment: Alignment.topRight,
-            child: Text(
-              "اسم البيان",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w300),
-            ),
+            child: CustomTxt(title: "اسم البيان"),
           ),
 
           Align(
             alignment: Alignment.topLeft,
-            child: Text(
-              " القيمة"
-              " جنيه مصري ",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            child: CustomTxt(
+              title:
+                  " 15,000"
+                  " جنيه مصري ",
+              fontWeight: FontWeight.bold,
             ),
           ),
           SizedBox(height: 10),
           Align(
             alignment: Alignment.bottomLeft,
-            child: CustomIcon(icon: Icons.copy_all, onPressed: () {}),
+            child: CustomIcon(
+              icon: Icons.copy_all,
+              onPressed: () {
+context.
+
+              },
+              color: Colors.black,
+            ),
           ),
         ],
       ),
