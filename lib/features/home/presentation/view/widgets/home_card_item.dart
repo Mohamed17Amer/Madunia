@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madunia/core/helper/helper_funcs.dart';
 import 'package:madunia/core/utils/widgets/custom_icon.dart';
 import 'package:madunia/core/utils/widgets/custom_txt.dart';
+import 'package:madunia/features/home/presentation/view_model/cubit/home_cubit.dart';
 
 class HomeCardItem extends StatelessWidget {
   const HomeCardItem({super.key});
@@ -40,8 +42,7 @@ class HomeCardItem extends StatelessWidget {
             child: CustomIcon(
               icon: Icons.copy_all,
               onPressed: () {
-context.
-
+                context.read<HomeCubit>().copyTotalToClipboard("total");
               },
               color: Colors.black,
             ),
