@@ -3,6 +3,7 @@ import 'package:madunia/core/utils/router/app_screens.dart';
 import 'package:madunia/features/app/presentation/pages/starting_screen.dart';
 import 'package:madunia/features/debit_report/presentation/view/pages/debit_screen.dart';
 import 'package:madunia/features/home/presentation/view/pages/home_screen.dart';
+import 'package:madunia/features/instructions/presentation/view/pages/annimated_instructions_screen.dart';
 import 'package:madunia/features/repair/presentation/view/pages/repair_request_screen.dart';
 
 abstract class AppRouter {
@@ -41,6 +42,13 @@ abstract class AppRouter {
         path: AppScreens.repairRequestScreen,
         builder: (context, state) {
           return RepairRequestScreen();
+        },
+      ),
+
+      GoRoute(
+        path: AppScreens.animatedInstructionsScreen,
+        builder: (context, state) {
+          return AnimatedInstructionsScreen();
         },
       ),
     ],
