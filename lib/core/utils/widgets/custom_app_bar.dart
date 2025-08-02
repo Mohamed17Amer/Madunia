@@ -25,7 +25,7 @@ class CustomAppBar extends StatelessWidget {
         child: CustomTxt(
           title: title,
           fontSize: 30,
-          fontColor: AppColors.bottomNavBarSelectedItemColor,
+          fontColor: AppColors.customAppBarTitleColor,
         ),
       ),
     );

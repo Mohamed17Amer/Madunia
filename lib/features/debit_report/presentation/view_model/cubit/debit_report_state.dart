@@ -4,3 +4,7 @@ part of 'debit_report_cubit.dart';
 sealed class DebitReportState {}
 
 final class DebitReportInitial extends DebitReportState {}
+
+final class SendItemInquiryRequestSuccess extends DebitReportState {}
+
+final class SendItemInquiryRequestFailure extends DebitReportState {}

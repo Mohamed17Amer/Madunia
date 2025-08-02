@@ -11,6 +11,7 @@ class AppColors {
   ];
   static const bottomNavBarBackgroundColor = Color(0xFF35333b);
   static const bottomNavBarSelectedItemColor = Color(0xFFc5d955);
+   static const  customAppBarTitleColor = Color(0xFFc5d955);
   static const iconsOutlinesDefaultColor = Color(0xFFFFFFFF);
   static const homeAppBarIconsBackgroundColor = Color(0xFF1d1d28);
   static const homeFilterationItemsBackgroundColor = Color(0xFF1c1c29);

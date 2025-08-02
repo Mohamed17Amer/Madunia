@@ -4,7 +4,7 @@ import 'package:madunia/features/app/presentation/pages/starting_screen.dart';
 import 'package:madunia/features/debit_report/presentation/view/pages/debit_screen.dart';
 import 'package:madunia/features/home/presentation/view/pages/home_screen.dart';
 import 'package:madunia/features/instructions/presentation/view/pages/annimated_instructions_screen.dart';
-import 'package:madunia/features/repair/presentation/view/pages/repair_request_screen.dart';
+import 'package:madunia/features/repair_request/presentation/view/pages/repair_request_screen.dart';
 
 abstract class AppRouter {
   static final router = GoRouter(

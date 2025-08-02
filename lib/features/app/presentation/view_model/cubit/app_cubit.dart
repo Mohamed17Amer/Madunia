@@ -5,7 +5,7 @@ import 'package:madunia/features/app/presentation/view/widgets/custom_bottom_nav
 import 'package:madunia/features/debit_report/presentation/view/pages/debit_screen.dart';
 import 'package:madunia/features/home/presentation/view/pages/home_screen.dart';
 import 'package:madunia/features/instructions/presentation/view/pages/annimated_instructions_screen.dart';
-import 'package:madunia/features/repair/presentation/view/pages/repair_request_screen.dart';
+import 'package:madunia/features/repair_request/presentation/view/pages/repair_request_screen.dart';
 part 'app_state.dart';
 
 class AppCubit extends Cubit<AppState> {
