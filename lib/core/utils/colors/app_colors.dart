@@ -20,6 +20,10 @@ class AppColors {
   static const homeShortsBackgroundColor = Color(0xFFd29ef1);
   static const homePlayShortsIconColor = Color(0xFF44125b);
 
+  static const debitReportItemTitleColor =Color.fromARGB(255, 198, 214, 21);
+
+  static const debitReportItemSubTitleColor =Color.fromARGB(255, 13, 13, 161);
+
   // static const
 
   // may be needed

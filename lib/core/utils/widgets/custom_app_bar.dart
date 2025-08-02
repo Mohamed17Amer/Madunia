@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:madunia/core/utils/colors/app_colors.dart';
+import 'package:madunia/core/utils/widgets/custom_txt.dart';
 
 class CustomAppBar extends StatelessWidget {
   final String title;
@@ -21,13 +22,10 @@ class CustomAppBar extends StatelessWidget {
       ),
       height: 80,
       child: Center(
-        child: Text(
-          title,
-          style: TextStyle(
-            fontSize: 30,
-            color: AppColors.bottomNavBarSelectedItemColor,
-          ),
-          textAlign: TextAlign.center,
+        child: CustomTxt(
+          title: title,
+          fontSize: 30,
+          fontColor: AppColors.bottomNavBarSelectedItemColor,
         ),
       ),
     );

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:madunia/core/helper/helper_funcs.dart';
+import 'package:madunia/core/utils/colors/app_colors.dart';
 import 'package:madunia/core/utils/widgets/custom_icon.dart';
+import 'package:madunia/core/utils/widgets/custom_txt.dart';
 
 class DebitReportItem extends StatelessWidget {
   const DebitReportItem({super.key});
@@ -12,13 +14,21 @@ class DebitReportItem extends StatelessWidget {
       child: SizedBox(
         //height: MediaQuery.of(context).size.height*.2,
         child: ListTile(
-          title: const Text("اسم البيان", style: TextStyle(fontSize: 24)),
-          subtitle: const Text(
-            "القيمة  "
-            "جنيه مصري",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          title: const CustomTxt(
+            title: "اسم البيان",
+            fontColor: AppColors.debitReportItemTitleColor,
           ),
-          leading: CustomIcon(onPressed: () {}, icon: Icons.check),
+          subtitle: const CustomTxt(
+            title:
+                "القيمة  "
+                "جنيه مصري",
+            fontWeight: FontWeight.bold,
+            fontColor: AppColors.debitReportItemSubTitleColor,
+          ),
+          leading: CustomIcon(
+            onPressed: () {},
+            icon: Icons.check,
+          ),
           trailing: CustomIcon(
             onPressed: () {
               showToastification(

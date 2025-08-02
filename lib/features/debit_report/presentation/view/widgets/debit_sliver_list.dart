@@ -14,7 +14,7 @@ class DebitSliverList extends StatelessWidget {
       separatorBuilder: (BuildContext context, int index) {
         return Divider(
           thickness: 2,
-          color: AppColors.homeAppBarIconsBackgroundColor,
+          color: AppColors.bottomNavBarSelectedItemColor,
         );
       },
     );
