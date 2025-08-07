@@ -3,50 +3,59 @@ import 'package:madunia/core/utils/errors/firebase_failures.dart';
 import 'package:madunia/features/app/data/models/app_user_model.dart';
 import 'package:madunia/features/debit_report/data/models/debit_item_model.dart';
 
+/// Enhanced FirestoreService with improved error handling, performance, and maintainability
 class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Collection references
-  CollectionReference get usersCollection => _firestore.collection('users');
-  CollectionReference debitItemsCollection(String userId) =>
-      usersCollection.doc(userId).collection('debitItems');
+  // Constants for better maintainability
+  static const String _usersCollection = 'users';
+  static const String _debitItemsCollection = 'debitItems';
+  static const String _uniqueNameField = 'uniqueName';
+  static const String _phoneNumberField = 'phoneNumber';
+  static const String _statusField = 'status';
+  static const String _createdAtField = 'createdAt';
+  static const String _recordMoneyValueField = 'recordMoneyValue';
+  static const String _totalDebitMoneyField = 'totalDebitMoney';
+  static const String _totalMoneyOwedField = 'totalMoneyOwed';
+
+  // Owed status constants
+  static const Set<String> _owedStatuses = {'pending', 'unpaid', 'overdue'};
+
+  // Collection references with better naming
+  CollectionReference get _usersRef => _firestore.collection(_usersCollection);
+  CollectionReference _debitItemsRef(String userId) =>
+      _usersRef.doc(userId).collection(_debitItemsCollection);
 
   // ============ USER FUNCTIONS ============
 
-  /// Create a new user
-  /// Checks for unique name before creating
+  /// Create a new user with improved error handling and validation
   Future<String> createUser({
     required String uniqueName,
     required String phoneNumber,
   }) async {
     try {
-      // Check if unique name already exists
-      final existingUser = await usersCollection
-          .where('uniqueName', isEqualTo: uniqueName)
-          .get();
+      // Input validation
+      _validateUserInput(uniqueName, phoneNumber);
 
-      if (existingUser.docs.isNotEmpty) {
+      // Check uniqueness more efficiently
+      if (await _isUniqueNameTaken(uniqueName)) {
         throw FirebaseFailure.fromException(
           Exception('User with this name already exists'),
         );
       }
-      //  if unique name does not exists, create new user
 
       final user = AppUser(
         id: '',
-        uniqueName: uniqueName,
-        phoneNumber: phoneNumber,
+        uniqueName: uniqueName.trim(),
+        phoneNumber: phoneNumber.trim(),
         totalDebitMoney: 0.0,
         totalMoneyOwed: 0.0,
       );
 
-      // add new user to firestore
-      final docRef = await usersCollection.add(user.toMap());
-
-      // return the user id
+      final docRef = await _usersRef.add(user.toMap());
       return docRef.id;
-
-      // return Failure creating user
+    } on FirebaseFailure {
+      rethrow; // Re-throw custom failures
     } catch (e) {
       throw FirebaseFailure.fromException(
         Exception('Failed to create user: $e'),
@@ -54,106 +63,134 @@ class FirestoreService {
     }
   }
 
-  /// Get all users as a stream
+  /// Get all users as a stream with better error handling
   Stream<List<AppUser>> getAllUsers() {
-    return usersCollection
-      //  .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) {
-          return snapshot.docs.map((doc) {
-            return AppUser.fromMap(doc.data() as Map<String, dynamic>, doc.id);
-          }).toList();
-        });
-  }
-
-  /// Get user by ID
-  Future<AppUser?> getUserById(String userId) async {
     try {
-      final doc = await usersCollection.doc(userId).get();
-      if (doc.exists) {
-        return AppUser.fromMap(doc.data() as Map<String, dynamic>, doc.id);
-      }
-      return null;
+      return _usersRef
+          .snapshots()
+          .map((snapshot) => _mapSnapshotToUsers(snapshot))
+          .handleError((error) {
+            throw FirebaseFailure.fromException(
+              Exception('Failed to get users: $error'),
+            );
+          });
     } catch (e) {
-      throw Exception('Failed to get user: $e');
+      throw FirebaseFailure.fromException(
+        Exception('Failed to initialize users stream: $e'),
+      );
     }
   }
 
-  /// Get user by unique name
+  /// Get user by ID with consistent error handling
+  Future<AppUser?> getUserById(String userId) async {
+    try {
+      _validateUserId(userId);
+
+      final doc = await _usersRef.doc(userId).get();
+      return doc.exists
+          ? AppUser.fromMap(doc.data() as Map<String, dynamic>, doc.id)
+          : null;
+    } catch (e) {
+      throw FirebaseFailure.fromException(Exception('Failed to get user: $e'));
+    }
+  }
+
+  /// Get user by unique name with better performance
   Future<AppUser?> getUserByName(String uniqueName) async {
     try {
-      final snapshot = await usersCollection
-          .where('uniqueName', isEqualTo: uniqueName)
+      if (uniqueName.trim().isEmpty) {
+        throw ArgumentError('Unique name cannot be empty');
+      }
+
+      final snapshot = await _usersRef
+          .where(_uniqueNameField, isEqualTo: uniqueName.trim())
           .limit(1)
           .get();
 
-      if (snapshot.docs.isNotEmpty) {
-        final doc = snapshot.docs.first;
-        return AppUser.fromMap(doc.data() as Map<String, dynamic>, doc.id);
-      }
-      return null;
+      if (snapshot.docs.isEmpty) return null;
+
+      final doc = snapshot.docs.first;
+      return AppUser.fromMap(doc.data() as Map<String, dynamic>, doc.id);
     } catch (e) {
-      throw Exception('Failed to get user by name: $e');
+      throw FirebaseFailure.fromException(
+        Exception('Failed to get user by name: $e'),
+      );
     }
   }
 
-  /// Update user information
+  /// Update user information with improved validation
   Future<void> updateUser({
     required String userId,
     String? uniqueName,
     String? phoneNumber,
   }) async {
     try {
-      Map<String, dynamic> updates = {};
+      _validateUserId(userId);
+
+      final Map<String, dynamic> updates = {};
 
       if (uniqueName != null) {
-        // Check if new unique name already exists (excluding current user)
-        final existingUser = await usersCollection
-            .where('uniqueName', isEqualTo: uniqueName)
-            .get();
-
-        if (existingUser.docs.isNotEmpty &&
-            existingUser.docs.first.id != userId) {
-          throw Exception('User with this name already exists');
+        final trimmedName = uniqueName.trim();
+        if (trimmedName.isEmpty) {
+          throw ArgumentError('Unique name cannot be empty');
         }
-        updates['uniqueName'] = uniqueName;
+
+        // Check uniqueness excluding current user
+        if (await _isUniqueNameTaken(trimmedName, excludeUserId: userId)) {
+          throw FirebaseFailure.fromException(
+            Exception('User with this name already exists'),
+          );
+        }
+        updates[_uniqueNameField] = trimmedName;
       }
 
       if (phoneNumber != null) {
-        updates['phoneNumber'] = phoneNumber;
+        final trimmedPhone = phoneNumber.trim();
+        if (trimmedPhone.isEmpty) {
+          throw ArgumentError('Phone number cannot be empty');
+        }
+        updates[_phoneNumberField] = trimmedPhone;
       }
 
       if (updates.isNotEmpty) {
-        await usersCollection.doc(userId).update(updates);
+        await _usersRef.doc(userId).update(updates);
       }
     } catch (e) {
-      throw Exception('Failed to update user: $e');
+      if (e is FirebaseFailure || e is ArgumentError) rethrow;
+      throw FirebaseFailure.fromException(
+        Exception('Failed to update user: $e'),
+      );
     }
   }
 
-  /// Delete user and all their debit items
+  /// Delete user and all debit items using transaction for consistency
   Future<void> deleteUser(String userId) async {
     try {
-      // Delete all debit items first
-      final debitItems = await debitItemsCollection(userId).get();
-      final batch = _firestore.batch();
+      _validateUserId(userId);
 
-      for (final doc in debitItems.docs) {
-        batch.delete(doc.reference);
-      }
+      // Use transaction for atomicity
+      await _firestore.runTransaction((transaction) async {
+        // Get all debit items
+        final debitItems = await _debitItemsRef(userId).get();
 
-      // Delete user
-      batch.delete(usersCollection.doc(userId));
+        // Delete all debit items
+        for (final doc in debitItems.docs) {
+          transaction.delete(doc.reference);
+        }
 
-      await batch.commit();
+        // Delete user
+        transaction.delete(_usersRef.doc(userId));
+      });
     } catch (e) {
-      throw Exception('Failed to delete user: $e');
+      throw FirebaseFailure.fromException(
+        Exception('Failed to delete user: $e'),
+      );
     }
   }
 
   // ============ DEBIT ITEM FUNCTIONS ============
 
-  /// Add a new debit item to user
+  /// Add debit item with transaction for consistency
   Future<String> addDebitItem({
     required String userId,
     required String recordName,
@@ -162,50 +199,75 @@ class FirestoreService {
     Map<String, dynamic>? additionalFields,
   }) async {
     try {
+      _validateUserId(userId);
+      _validateDebitItemInput(recordName, recordMoneyValue, status);
+
       final debitItem = DebitItem(
         id: '',
-        recordName: recordName,
+        recordName: recordName.trim(),
         recordMoneyValue: recordMoneyValue,
-        status: status,
+        status: status.trim().toLowerCase(),
         additionalFields: additionalFields,
       );
 
-      final docRef = await debitItemsCollection(userId).add(debitItem.toMap());
+      // Use transaction to ensure consistency
+      late String docId;
+      await _firestore.runTransaction((transaction) async {
+        final docRef = _debitItemsRef(userId).doc();
+        transaction.set(docRef, debitItem.toMap());
+        docId = docRef.id;
 
-      // Update user totals
-      await _updateUserTotals(userId);
+        // Update totals in the same transaction
+        await _updateUserTotalsInTransaction(transaction, userId);
+      });
 
-      return docRef.id;
+      return docId;
     } catch (e) {
-      throw Exception('Failed to add debit item: $e');
+      throw FirebaseFailure.fromException(
+        Exception('Failed to add debit item: $e'),
+      );
     }
   }
 
-  /// Get all debit items for a user as stream
+  /// Get debit items stream with error handling
   Stream<List<DebitItem>> getDebitItems(String userId) {
-    return debitItemsCollection(
-      userId,
-    ).orderBy('createdAt', descending: true).snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return DebitItem.fromMap(doc.data() as Map<String, dynamic>, doc.id);
-      }).toList();
-    });
+    try {
+      _validateUserId(userId);
+
+      return _debitItemsRef(userId)
+          .orderBy(_createdAtField, descending: true)
+          .snapshots()
+          .map((snapshot) => _mapSnapshotToDebitItems(snapshot))
+          .handleError((error) {
+            throw FirebaseFailure.fromException(
+              Exception('Failed to get debit items: $error'),
+            );
+          });
+    } catch (e) {
+      throw FirebaseFailure.fromException(
+        Exception('Failed to initialize debit items stream: $e'),
+      );
+    }
   }
 
   /// Get debit item by ID
   Future<DebitItem?> getDebitItemById(String userId, String debitItemId) async {
     try {
-      final doc = await debitItemsCollection(userId).doc(debitItemId).get();
-      if (doc.exists) {
-        return DebitItem.fromMap(doc.data() as Map<String, dynamic>, doc.id);
-      }
-      return null;
+      _validateUserId(userId);
+      _validateDebitItemId(debitItemId);
+
+      final doc = await _debitItemsRef(userId).doc(debitItemId).get();
+      return doc.exists
+          ? DebitItem.fromMap(doc.data() as Map<String, dynamic>, doc.id)
+          : null;
     } catch (e) {
-      throw Exception('Failed to get debit item: $e');
+      throw FirebaseFailure.fromException(
+        Exception('Failed to get debit item: $e'),
+      );
     }
   }
 
-  /// Update debit item
+  /// Update debit item with transaction
   Future<void> updateDebitItem({
     required String userId,
     required String debitItemId,
@@ -215,186 +277,308 @@ class FirestoreService {
     Map<String, dynamic>? additionalFields,
   }) async {
     try {
-      Map<String, dynamic> updates = {};
+      _validateUserId(userId);
+      _validateDebitItemId(debitItemId);
 
-      if (recordName != null) updates['recordName'] = recordName;
-      if (recordMoneyValue != null)
-        updates['recordMoneyValue'] = recordMoneyValue;
-      if (status != null) updates['status'] = status;
-      if (additionalFields != null)
+      final Map<String, dynamic> updates = {};
+
+      if (recordName != null) {
+        final trimmed = recordName.trim();
+        if (trimmed.isEmpty) throw ArgumentError('Record name cannot be empty');
+        updates['recordName'] = trimmed;
+      }
+
+      if (recordMoneyValue != null) {
+        if (recordMoneyValue < 0)
+          throw ArgumentError('Money value cannot be negative');
+        updates[_recordMoneyValueField] = recordMoneyValue;
+      }
+
+      if (status != null) {
+        final trimmed = status.trim();
+        if (trimmed.isEmpty) throw ArgumentError('Status cannot be empty');
+        updates[_statusField] = trimmed.toLowerCase();
+      }
+
+      if (additionalFields != null) {
         updates['additionalFields'] = additionalFields;
+      }
 
       if (updates.isNotEmpty) {
-        await debitItemsCollection(userId).doc(debitItemId).update(updates);
-        await _updateUserTotals(userId);
+        await _firestore.runTransaction((transaction) async {
+          transaction.update(_debitItemsRef(userId).doc(debitItemId), updates);
+          await _updateUserTotalsInTransaction(transaction, userId);
+        });
       }
     } catch (e) {
-      throw Exception('Failed to update debit item: $e');
+      if (e is ArgumentError) rethrow;
+      throw FirebaseFailure.fromException(
+        Exception('Failed to update debit item: $e'),
+      );
     }
   }
 
-  /// Delete debit item
+  /// Delete debit item with transaction
   Future<void> deleteDebitItem(String userId, String debitItemId) async {
     try {
-      await debitItemsCollection(userId).doc(debitItemId).delete();
-      await _updateUserTotals(userId);
+      _validateUserId(userId);
+      _validateDebitItemId(debitItemId);
+
+      await _firestore.runTransaction((transaction) async {
+        transaction.delete(_debitItemsRef(userId).doc(debitItemId));
+        await _updateUserTotalsInTransaction(transaction, userId);
+      });
     } catch (e) {
-      throw Exception('Failed to delete debit item: $e');
+      throw FirebaseFailure.fromException(
+        Exception('Failed to delete debit item: $e'),
+      );
     }
   }
 
-  /// Get debit items by status
+  /// Get debit items by status with validation
   Stream<List<DebitItem>> getDebitItemsByStatus(String userId, String status) {
-    return debitItemsCollection(userId)
-        .where('status', isEqualTo: status)
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) {
-          return snapshot.docs.map((doc) {
-            return DebitItem.fromMap(
-              doc.data() as Map<String, dynamic>,
-              doc.id,
+    try {
+      _validateUserId(userId);
+      if (status.trim().isEmpty) {
+        throw ArgumentError('Status cannot be empty');
+      }
+
+      return _debitItemsRef(userId)
+          .where(_statusField, isEqualTo: status.trim().toLowerCase())
+          .orderBy(_createdAtField, descending: true)
+          .snapshots()
+          .map((snapshot) => _mapSnapshotToDebitItems(snapshot))
+          .handleError((error) {
+            throw FirebaseFailure.fromException(
+              Exception('Failed to get debit items by status: $error'),
             );
-          }).toList();
-        });
+          });
+    } catch (e) {
+      if (e is ArgumentError) rethrow;
+      throw FirebaseFailure.fromException(
+        Exception('Failed to initialize debit items by status stream: $e'),
+      );
+    }
   }
 
   // ============ HELPER FUNCTIONS ============
 
-  /// Private method to update user totals automatically
+  /// Update user totals with better error handling
   Future<void> _updateUserTotals(String userId) async {
+    await _firestore.runTransaction((transaction) async {
+      await _updateUserTotalsInTransaction(transaction, userId);
+    });
+  }
+
+  /// Update user totals within a transaction
+  Future<void> _updateUserTotalsInTransaction(
+    Transaction transaction,
+    String userId,
+  ) async {
     try {
-      final debitItemsSnapshot = await debitItemsCollection(userId).get();
+      final debitItemsSnapshot = await _debitItemsRef(userId).get();
+      final totals = _calculateTotals(debitItemsSnapshot.docs);
 
-      double totalDebitMoney = 0.0;
-      double totalMoneyOwed = 0.0;
-
-      for (final doc in debitItemsSnapshot.docs) {
-        final data = doc.data() as Map<String, dynamic>;
-        final money = (data['recordMoneyValue'] ?? 0.0).toDouble();
-        final status = data['status'] ?? '';
-
-        totalDebitMoney += money;
-
-        // Count as owed if status is pending or unpaid
-        if (status.toLowerCase() == 'pending' ||
-            status.toLowerCase() == 'unpaid' ||
-            status.toLowerCase() == 'overdue') {
-          totalMoneyOwed += money;
-        }
-      }
-
-      await usersCollection.doc(userId).update({
-        'totalDebitMoney': totalDebitMoney,
-        'totalMoneyOwed': totalMoneyOwed,
+      transaction.update(_usersRef.doc(userId), {
+        _totalDebitMoneyField: totals.totalMoney,
+        _totalMoneyOwedField: totals.totalOwed,
       });
     } catch (e) {
-      print('Error updating user totals: $e');
+      print('Error updating user totals in transaction: $e');
+      rethrow;
     }
   }
 
-  /// Manually recalculate totals for a user
+  /// Manually recalculate totals
   Future<void> recalculateUserTotals(String userId) async {
-    await _updateUserTotals(userId);
+    try {
+      _validateUserId(userId);
+      await _updateUserTotals(userId);
+    } catch (e) {
+      throw FirebaseFailure.fromException(
+        Exception('Failed to recalculate user totals: $e'),
+      );
+    }
   }
 
-  /// Get user statistics
-  Future<Map<String, dynamic>> getUserStatistics(String userId) async {
+  /// Get user statistics with improved structure
+  Future<UserStatistics> getUserStatistics(String userId) async {
     try {
-      final debitItemsSnapshot = await debitItemsCollection(userId).get();
+      _validateUserId(userId);
 
-      Map<String, int> statusCount = {};
-      Map<String, double> statusTotal = {};
-      double totalMoney = 0.0;
-      double totalOwed = 0.0;
+      final debitItemsSnapshot = await _debitItemsRef(userId).get();
+      final docs = debitItemsSnapshot.docs;
 
-      for (final doc in debitItemsSnapshot.docs) {
+      final statusCount = <String, int>{};
+      final statusTotal = <String, double>{};
+      final totals = _calculateTotals(docs);
+
+      for (final doc in docs) {
         final data = doc.data() as Map<String, dynamic>;
-        final money = (data['recordMoneyValue'] ?? 0.0).toDouble();
-        final status = data['status'] ?? 'unknown';
+        final status = (data[_statusField] ?? 'unknown')
+            .toString()
+            .toLowerCase();
+        final money = (data[_recordMoneyValueField] ?? 0.0).toDouble();
 
-        totalMoney += money;
-
-        // Count by status
         statusCount[status] = (statusCount[status] ?? 0) + 1;
         statusTotal[status] = (statusTotal[status] ?? 0.0) + money;
-
-        // Count as owed
-        if (status.toLowerCase() == 'pending' ||
-            status.toLowerCase() == 'unpaid' ||
-            status.toLowerCase() == 'overdue') {
-          totalOwed += money;
-        }
       }
 
-      return {
-        'totalItems': debitItemsSnapshot.docs.length,
-        'totalMoney': totalMoney,
-        'totalOwed': totalOwed,
-        'statusCount': statusCount,
-        'statusTotal': statusTotal,
-      };
+      return UserStatistics(
+        totalItems: docs.length,
+        totalMoney: totals.totalMoney,
+        totalOwed: totals.totalOwed,
+        statusCount: statusCount,
+        statusTotal: statusTotal,
+      );
     } catch (e) {
-      throw Exception('Failed to get user statistics: $e');
+      throw FirebaseFailure.fromException(
+        Exception('Failed to get user statistics: $e'),
+      );
     }
   }
 
-  /// Search users by name (partial match)
+  /// Enhanced search with better query handling
   Future<List<AppUser>> searchUsersByName(String query) async {
     try {
-      final snapshot = await usersCollection
-          .where('uniqueName', isGreaterThanOrEqualTo: query)
-          .where('uniqueName', isLessThanOrEqualTo: query + '\uf8ff')
+      final trimmedQuery = query.trim();
+      if (trimmedQuery.isEmpty) return [];
+
+      final snapshot = await _usersRef
+          .where(_uniqueNameField, isGreaterThanOrEqualTo: trimmedQuery)
+          .where(_uniqueNameField, isLessThanOrEqualTo: '$trimmedQuery\uf8ff')
+          .limit(50) // Add limit for performance
           .get();
 
-      return snapshot.docs.map((doc) {
-        return AppUser.fromMap(doc.data() as Map<String, dynamic>, doc.id);
-      }).toList();
+      return _mapSnapshotToUsers(snapshot);
     } catch (e) {
-      throw Exception('Failed to search users: $e');
+      throw FirebaseFailure.fromException(
+        Exception('Failed to search users: $e'),
+      );
+    }
+  }
+
+  // ============ PRIVATE HELPER METHODS ============
+
+  /// Check if unique name is taken
+  Future<bool> _isUniqueNameTaken(
+    String uniqueName, {
+    String? excludeUserId,
+  }) async {
+    final query = await _usersRef
+        .where(_uniqueNameField, isEqualTo: uniqueName)
+        .limit(1)
+        .get();
+
+    if (query.docs.isEmpty) return false;
+
+    // If excluding a user ID, check if the found user is different
+    if (excludeUserId != null) {
+      return query.docs.first.id != excludeUserId;
+    }
+
+    return true;
+  }
+
+  /// Calculate totals from documents
+  ({double totalMoney, double totalOwed}) _calculateTotals(
+    List<QueryDocumentSnapshot> docs,
+  ) {
+    double totalMoney = 0.0;
+    double totalOwed = 0.0;
+
+    for (final doc in docs) {
+      final data = doc.data() as Map<String, dynamic>;
+      final money = (data[_recordMoneyValueField] ?? 0.0).toDouble();
+      final status = (data[_statusField] ?? '').toString().toLowerCase();
+
+      totalMoney += money;
+
+      if (_owedStatuses.contains(status)) {
+        totalOwed += money;
+      }
+    }
+
+    return (totalMoney: totalMoney, totalOwed: totalOwed);
+  }
+
+  /// Map snapshot to users list
+  List<AppUser> _mapSnapshotToUsers(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return AppUser.fromMap(doc.data() as Map<String, dynamic>, doc.id);
+    }).toList();
+  }
+
+  /// Map snapshot to debit items list
+  List<DebitItem> _mapSnapshotToDebitItems(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return DebitItem.fromMap(doc.data() as Map<String, dynamic>, doc.id);
+    }).toList();
+  }
+
+  // ============ VALIDATION METHODS ============
+
+  void _validateUserId(String userId) {
+    if (userId.trim().isEmpty) {
+      throw ArgumentError('User ID cannot be empty');
+    }
+  }
+
+  void _validateDebitItemId(String debitItemId) {
+    if (debitItemId.trim().isEmpty) {
+      throw ArgumentError('Debit item ID cannot be empty');
+    }
+  }
+
+  void _validateUserInput(String uniqueName, String phoneNumber) {
+    if (uniqueName.trim().isEmpty) {
+      throw ArgumentError('Unique name cannot be empty');
+    }
+    if (phoneNumber.trim().isEmpty) {
+      throw ArgumentError('Phone number cannot be empty');
+    }
+  }
+
+  void _validateDebitItemInput(
+    String recordName,
+    double recordMoneyValue,
+    String status,
+  ) {
+    if (recordName.trim().isEmpty) {
+      throw ArgumentError('Record name cannot be empty');
+    }
+    if (recordMoneyValue < 0) {
+      throw ArgumentError('Record money value cannot be negative');
+    }
+    if (status.trim().isEmpty) {
+      throw ArgumentError('Status cannot be empty');
     }
   }
 }
 
-// Usage Examples:
-/*
+/// Data class for user statistics
+class UserStatistics {
+  final int totalItems;
+  final double totalMoney;
+  final double totalOwed;
+  final Map<String, int> statusCount;
+  final Map<String, double> statusTotal;
 
-// Initialize the service
-final firestoreService = FirestoreService();
+  const UserStatistics({
+    required this.totalItems,
+    required this.totalMoney,
+    required this.totalOwed,
+    required this.statusCount,
+    required this.statusTotal,
+  });
 
-// Create a user
-String userId = await firestoreService.createUser(
-  uniqueName: "John Doe",
-  phoneNumber: "+1234567890",
-);
-
-// Add debit item
-await firestoreService.addDebitItem(
-  userId: userId,
-  recordName: "Grocery Shopping",
-  recordMoneyValue: 150.50,
-  status: "pending",
-  additionalFields: {
-    "category": "food",
-    "location": "SuperMarket",
-    "notes": "Weekly grocery shopping"
-  },
-);
-
-// Get user data
-AppUser? user = await firestoreService.getUserById(userId);
-
-// Get debit items stream
-Stream<List<DebitItem>> debitItemsStream = firestoreService.getDebitItems(userId);
-
-// Update debit item status
-await firestoreService.updateDebitItem(
-  userId: userId,
-  debitItemId: "debitItemId",
-  status: "paid",
-);
-
-// Get user statistics
-Map<String, dynamic> stats = await firestoreService.getUserStatistics(userId);
-
-*/
+  Map<String, dynamic> toMap() {
+    return {
+      'totalItems': totalItems,
+      'totalMoney': totalMoney,
+      'totalOwed': totalOwed,
+      'statusCount': statusCount,
+      'statusTotal': statusTotal,
+    };
+  }
+}
