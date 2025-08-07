@@ -6,7 +6,7 @@ import 'package:madunia/core/utils/widgets/custom_txt_form_field.dart';
 import 'package:madunia/features/repair_request/presentation/view_model/cubit/repair_request_cubit.dart';
 
 class RepairRequestScreen extends StatelessWidget {
-  RepairRequestScreen({super.key});
+  const RepairRequestScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

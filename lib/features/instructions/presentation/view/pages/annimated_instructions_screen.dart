@@ -16,6 +16,7 @@ class _AnimatedInstructionsScreenState
   late Timer _timer;
 
   double scrollSpeed = 1.0;
+  
 
   void _startScrolling() {
     _timer = Timer.periodic(const Duration(milliseconds: 30), (timer) {
