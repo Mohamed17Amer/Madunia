@@ -1,10 +1,11 @@
 import 'package:go_router/go_router.dart';
 import 'package:madunia/core/utils/router/app_screens.dart';
+import 'package:madunia/features/app/data/models/app_user_model.dart';
 import 'package:madunia/features/app/presentation/pages/starting_screen.dart';
 import 'package:madunia/features/debit_report/presentation/view/pages/debit_screen.dart';
-import 'package:madunia/features/home/presentation/view/pages/home_screen.dart';
 import 'package:madunia/features/instructions/presentation/view/pages/annimated_instructions_screen.dart';
 import 'package:madunia/features/repair_request/presentation/view/pages/repair_request_screen.dart';
+import 'package:madunia/features/user_details/presentation/view/pages/user_details_screen.dart';
 
 abstract class AppRouter {
   static final router = GoRouter(
@@ -25,9 +26,9 @@ abstract class AppRouter {
       ),
 
       GoRoute(
-        path: AppScreens.homeScreen,
+        path: AppScreens.userDetailsScreen,
         builder: (context, state) {
-          return HomeScreen();
+          return UserDetailsScreen();
         },
       ),
 
