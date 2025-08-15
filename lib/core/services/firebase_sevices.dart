@@ -289,8 +289,9 @@ class FirestoreService {
       }
 
       if (recordMoneyValue != null) {
-        if (recordMoneyValue < 0)
+        if (recordMoneyValue < 0) {
           throw ArgumentError('Money value cannot be negative');
+        }
         updates[_recordMoneyValueField] = recordMoneyValue;
       }
 
