@@ -31,7 +31,7 @@ class CustomTxt extends StatelessWidget {
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       minFontSize:
-          20, // ✅ text will shrink instead of overflowing/ textAlign: TextAlign.center,
+          20, // text will shrink instead of overflowing/ textAlign: TextAlign.center,
     );
   }
 }
