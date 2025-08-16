@@ -59,7 +59,7 @@ class _AnimatedInstructionsScreenState
       ),
       itemBuilder: (context, index) {
         if (index == 0 || index == instructions.length + 1) {
-          return const SizedBox(height: 900); // Top & bottom padding
+          return const SizedBox(height: 800); // Top & bottom padding
         }
 
         final realIndex = index - 1;
@@ -89,7 +89,7 @@ class _AnimatedInstructionsScreenState
     "عدم التأخير في سداد فواتير الكهرباء والتليفون الأرضي والإنترنت.",
     "يتم إخبار الأدمن مباشرة مع كل تجديد لباقة الإنترنت لمن يُريد الإشتراك، وإلا سيتم فصل جهازه عن الشبكة بشكل تلقائي.",
     "يتم تحويل أي مبلغ مستحق على نفس رقم الأدمن والمذكور في البند التالي",
-    "+2 01011245647",
+    "+" "201011245647",
     " يتم التحويل عن طريق إنستاباي أو فودافون كاش فقط",
     "يتم إرسال سكرين التحويل على الواتس للأدمن",
     "في حالة إرسال طلب استفسار أو طلب صيانة ولم يتم الرد شفهياً خلال 3 أيام، يقوم المٌرسل بطلب مقابلة الأدمن والمسؤول مباشرةً",

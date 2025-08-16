@@ -20,9 +20,7 @@ class RepairRequestScreen extends StatelessWidget {
               context: context,
               message: "تم ارسال طلب الصيانة بنجاح",
             );
-          } else if (state is SendRepairRequestEmailLoading) {
-            Center(child: CircularProgressIndicator());
-          } else {
+          } else if (state is SendRepairRequestEmailFailure) {
             showToastification(
               context: context,
               message: "فشل في ارسال طلب الصيانة ",
@@ -34,15 +32,16 @@ class RepairRequestScreen extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Form(
               key: context.read<RepairRequestCubit>().repairScreenKey,
-              child: Column(
-                children: [
-                  SafeArea(child: SizedBox(height: 20)),
-                  CustomAppBar(title: "طلب صيانة"),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SafeArea(child: SizedBox(height: 20)),
+                    const CustomAppBar(title: "طلب صيانة"),
+                    const SizedBox(height: 20),
 
-                  SizedBox(height: 20),
-                  Expanded(
-                    flex: 2,
-                    child: CustomTxtFormField(
+                    /// اسم الصيانة
+                    CustomTxtFormField(
                       labelText: "اسم الصيانة",
                       hintText: "الرجاء إدخال اسم الصيانة",
                       maxLines: 1,
@@ -58,10 +57,10 @@ class RepairRequestScreen extends StatelessWidget {
                           .read<RepairRequestCubit>()
                           .repairNameController,
                     ),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: CustomTxtFormField(
+                    const SizedBox(height: 16),
+
+                    /// وصف المشكلة
+                    CustomTxtFormField(
                       controller: context
                           .read<RepairRequestCubit>()
                           .repairDescriptionController,
@@ -77,38 +76,45 @@ class RepairRequestScreen extends StatelessWidget {
                             );
                       },
                     ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        context.read<RepairRequestCubit>().sendRepairReuest(
-                          context: context,
-                        );
-                      },
+                    const SizedBox(height: 24),
+
+                    /// إرسال الزر
+                    ElevatedButton(
+                      onPressed: state is SendRepairRequestEmailLoading
+                          ? null // disable while loading
+                          : () {
+                              context
+                                  .read<RepairRequestCubit>()
+                                  .sendRepairReuest(context: context);
+                            },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            Colors.transparent, // Optional: customize color
+                        backgroundColor: Colors.deepPurple,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 100,
-                          vertical: 8,
+                          vertical: 12,
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            40,
-                          ), // Makes it oval
+                          borderRadius: BorderRadius.circular(40),
                         ),
                         textStyle: const TextStyle(fontSize: 18),
                       ),
-                      child: const CustomTxt(
-                        title: "إرسال الطلب",
-                        fontColor: Colors.white,
-                      ),
+                      child: state is SendRepairRequestEmailLoading
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
+                          : const CustomTxt(
+                              title: "إرسال الطلب",
+                              fontColor: Colors.white,
+                            ),
                     ),
-                  ),
-
-                  Expanded(flex: 4, child: SizedBox(height: 20)),
-                ],
+                    const SizedBox(height: 40),
+                  ],
+                ),
               ),
             ),
           );

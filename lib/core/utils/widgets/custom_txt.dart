@@ -17,15 +17,17 @@ class CustomTxt extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      title,
+      "  $title  ",
       style: TextStyle(
         fontSize: fontSize ?? 24,
         fontWeight: fontWeight ?? FontWeight.w400,
         color: fontColor,
         textBaseline: TextBaseline.alphabetic,
+    
         wordSpacing: 0.1,
         overflow: TextOverflow.ellipsis,
       ),
+     // textAlign: TextAlign.center,
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:madunia/core/utils/functions/simple_bloc_observer.dart';
 import 'package:madunia/core/utils/router/app_router.dart';
 import 'package:madunia/features/app/presentation/view_model/cubit/app_cubit.dart';
 import 'package:madunia/firebase_options.dart';
+import 'package:toastification/toastification.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,13 +28,16 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => AppCubit()..checkLoginStatus()),
       ],
-      child: MaterialApp.router(
-        routerConfig: AppRouter.router,
-        debugShowCheckedModeBanner: false,
-
-        title: 'Madunia App',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      child: ToastificationWrapper(
+        
+        child: MaterialApp.router(
+          routerConfig: AppRouter.router,
+          debugShowCheckedModeBanner: false,
+        
+          title: 'Madunia App',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          ),
         ),
       ),
     );

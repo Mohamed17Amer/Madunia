@@ -10,6 +10,7 @@ class CustomScaffold extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Container(
           height: double.infinity,
           width: double.infinity,

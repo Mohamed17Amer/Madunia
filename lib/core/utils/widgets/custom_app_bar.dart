@@ -22,10 +22,14 @@ class CustomAppBar extends StatelessWidget {
       ),
       height: 80,
       child: Center(
-        child: CustomTxt(
-          title: title,
-          fontSize: 30,
-          fontColor: AppColors.customAppBarTitleColor,
+        child: FittedBox(
+          alignment: Alignment.center,
+          fit: BoxFit.fill,
+          child: CustomTxt(
+            title: title,
+            fontSize: 30,
+            fontColor: AppColors.customAppBarTitleColor,
+          ),
         ),
       ),
     );

@@ -43,6 +43,8 @@ class DebitReportCubit extends Cubit<DebitReportState> {
     required BuildContext context,
     required String debitItemTitle,
   }) async {
+          showToastification(context: context, message: "برجاء الانتظار...");
+
     await sendGmailMessage(
       context: context,
       debitItemTitle: debitItemTitle,
@@ -57,7 +59,7 @@ class DebitReportCubit extends Cubit<DebitReportState> {
     required BuildContext context,
     required String debitItemTitle,
   }) async {
-    //  emit(SendRequestEmailLoading());
+     // emit(SendRequestEmailLoading());
     // Gmail SMTP configuration
     //sender server
     final String username = 'my.apps.emails17@gmail.com';
@@ -85,11 +87,11 @@ class DebitReportCubit extends Cubit<DebitReportState> {
 
     try {
       final sendReport = await send(message, smtpServer);
-      //  emit(SendRequestEmailSuccess());
+     //   emit(SendRequestEmailSuccess());
       log('Message sent: $sendReport');
     } catch (e) {
       log('Error sending email: $e');
-      //  emit(SendRequestEmailFailure());
+     //   emit(SendRequestEmailFailure());
     }
   }
 

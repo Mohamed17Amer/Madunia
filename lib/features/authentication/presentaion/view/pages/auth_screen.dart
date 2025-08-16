@@ -19,81 +19,75 @@ class AuthScreen extends StatelessWidget {
         builder: (context, state) {
           return CustomScaffold(
             body: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(16.0),
               child: Form(
                 key: context.read<AuthCubit>().authScreenKey,
-                child: Column(
-                  children: [
-                    SafeArea(child: SizedBox(height: 20)),
-                    CustomAppBar(title: "تسجيل دخول باسم المستخدم"),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SafeArea(child: SizedBox(height: 20)),
+                      const CustomAppBar(title: "تسجيل دخول باسم المستخدم"),
+                      const SizedBox(height: 30),
 
-                    SizedBox(height: 20),
-                    Expanded(
-                      flex: 2,
-                      child: CustomTxtFormField(
+                      // Username field
+                      CustomTxtFormField(
                         labelText: "اسم المستخدم المميز",
-                        hintText:
-                            "الرجاء إدخال اسم المستخدم المُستلم من الأدمن",
+                        hintText: "الرجاء إدخال اسم المستخدم المُستلم من الأدمن",
                         maxLines: 1,
                         validator: (value) {
                           return context.read<AuthCubit>().validateTxtFormField(
-                            value: value,
-                            errorHint: "الرجاء إدخال الاسم المميز بطريقة صحيحة",
-                          );
+                                value: value,
+                                errorHint:
+                                    "الرجاء إدخال الاسم المميز بطريقة صحيحة",
+                              );
                         },
-                        controller: context
-                            .read<AuthCubit>()
-                            .userNameAuthController,
+                        controller:
+                            context.read<AuthCubit>().userNameAuthController,
                       ),
-                    ),
+                      const SizedBox(height: 20),
 
-                    BlocConsumer<AuthCubit, AuthState>(
-                      listener: (context, state) {
-                        if (state is LoginByUserNameSuccess) {
-                          showToastification(
-                            context: context,
-                            message: "تم تسجيل الدخول بنجاح",
-                          );
+                      // Login button + BlocConsumer
+                      BlocConsumer<AuthCubit, AuthState>(
+                        listener: (context, state) {
+                          if (state is LoginByUserNameSuccess) {
+                            showToastification(
+                              context: context,
+                              message: "تم تسجيل الدخول بنجاح",
+                            );
 
-                          navigateReplacementWithGoRouter(
-                            context: context,
-                            path: AppScreens.startingScreen,
-                            extra: state.user,
-                          );
-                        } else if (state is LoginByUserNameFailure) {
-                          showToastification(
-                            context: context,
-                            message: '''راجع الاتصال بالانترنت أو راجع الأدمن
-                            لم يتم العثور على المستخدم''',
-                          );
-                        } else if (state is LoginByUserNameLoading) {
-                          Expanded(
-                            flex: 1,
-                            child: Center(child: CircularProgressIndicator()),
-                          );
-                        }
-                      },
-
-                      builder: (context, state) {
-                        return Expanded(
-                          flex: 1,
-                          child: ElevatedButton(
+                            navigateReplacementWithGoRouter(
+                              context: context,
+                              path: AppScreens.startingScreen,
+                              extra: state.user,
+                            );
+                          } else if (state is LoginByUserNameFailure) {
+                            showToastification(
+                              context: context,
+                              message:
+                                  "راجع الاتصال بالانترنت أو راجع الأدمن\nلم يتم العثور على المستخدم",
+                            );
+                          }
+                        },
+                        builder: (context, state) {
+                          if (state is LoginByUserNameLoading) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
+                          return ElevatedButton(
                             onPressed: () {
                               context.read<AuthCubit>().sendloginReuest(
-                                context: context,
-                              );
+                                    context: context,
+                                  );
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors
-                                  .transparent, // Optional: customize color
+                              backgroundColor: Colors.transparent,
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 100,
-                                vertical: 8,
+                                vertical: 12,
                               ),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                  40,
-                                ), // Makes it oval
+                                borderRadius: BorderRadius.circular(40),
                               ),
                               textStyle: const TextStyle(fontSize: 18),
                             ),
@@ -101,13 +95,13 @@ class AuthScreen extends StatelessWidget {
                               title: "تسجيل الدخول",
                               fontColor: Colors.white,
                             ),
-                          ),
-                        );
-                      },
-                    ),
+                          );
+                        },
+                      ),
 
-                    Expanded(flex: 4, child: SizedBox(height: 20)),
-                  ],
+                      const SizedBox(height: 40),
+                    ],
+                  ),
                 ),
               ),
             ),
