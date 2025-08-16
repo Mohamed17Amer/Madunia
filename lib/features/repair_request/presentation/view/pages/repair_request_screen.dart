@@ -40,7 +40,6 @@ class RepairRequestScreen extends StatelessWidget {
                     const CustomAppBar(title: "طلب صيانة"),
                     const SizedBox(height: 20),
 
-                    /// اسم الصيانة
                     CustomTxtFormField(
                       labelText: "اسم الصيانة",
                       hintText: "الرجاء إدخال اسم الصيانة",
@@ -59,7 +58,6 @@ class RepairRequestScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
 
-                    /// وصف المشكلة
                     CustomTxtFormField(
                       controller: context
                           .read<RepairRequestCubit>()
@@ -78,7 +76,6 @@ class RepairRequestScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 24),
 
-                    /// إرسال الزر
                     ElevatedButton(
                       onPressed: state is SendRepairRequestEmailLoading
                           ? null // disable while loading

@@ -20,6 +20,7 @@ class DebitReportItem extends StatelessWidget {
             //height: MediaQuery.of(context).size.height*.2,
             child: ListTile(
               // debit item name
+              
               title: CustomTxt(
                 title: debitItem!.recordName,
                 fontWeight: FontWeight.bold,

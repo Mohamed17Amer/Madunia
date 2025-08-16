@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class CustomTxt extends StatelessWidget {
@@ -16,18 +17,21 @@ class CustomTxt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
+    return AutoSizeText(
       "  $title  ",
       style: TextStyle(
         fontSize: fontSize ?? 24,
         fontWeight: fontWeight ?? FontWeight.w400,
         color: fontColor,
         textBaseline: TextBaseline.alphabetic,
-    
+
         wordSpacing: 0.1,
         overflow: TextOverflow.ellipsis,
       ),
-     // textAlign: TextAlign.center,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      minFontSize:
+          20, // ✅ text will shrink instead of overflowing/ textAlign: TextAlign.center,
     );
   }
 }

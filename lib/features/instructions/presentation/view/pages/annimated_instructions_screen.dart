@@ -63,16 +63,19 @@ class _AnimatedInstructionsScreenState
         }
 
         final realIndex = index - 1;
-        return ListTile(
-          leading: CircleAvatar(child: Text("${realIndex + 1}")),
-          title: Center(
-            child: Text(
-              instructions[realIndex],
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListTile(
+            leading: CircleAvatar(child: Text("${realIndex + 1}")),
+            title: Center(
+              child: Text(
+                instructions[realIndex],
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                ),
               ),
             ),
           ),
