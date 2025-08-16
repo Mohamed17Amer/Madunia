@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:madunia/core/helper/helper_funcs.dart';
-import 'package:madunia/core/utils/router/app_screens.dart';
 import 'package:madunia/features/app/data/models/app_user_model.dart';
 import 'package:madunia/features/user_details/presentation/view/widgets/user_details_card_item.dart';
 import 'package:madunia/features/user_details/presentation/view_model/cubit/user_details_cubit.dart';

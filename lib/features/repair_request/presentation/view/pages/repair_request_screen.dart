@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:madunia/core/helper/helper_funcs.dart';
 import 'package:madunia/core/utils/widgets/custom_app_bar.dart';
 import 'package:madunia/core/utils/widgets/custom_txt.dart';
 import 'package:madunia/core/utils/widgets/custom_txt_form_field.dart';
@@ -12,7 +13,22 @@ class RepairRequestScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => RepairRequestCubit(),
-      child: BlocBuilder<RepairRequestCubit, RepairRequestState>(
+      child: BlocConsumer<RepairRequestCubit, RepairRequestState>(
+        listener: (context, state) {
+          if (state is SendRepairRequestEmailSuccess) {
+            showToastification(
+              context: context,
+              message: "تم ارسال طلب الصيانة بنجاح",
+            );
+          } else if (state is SendRepairRequestEmailLoading) {
+            Center(child: CircularProgressIndicator());
+          } else {
+            showToastification(
+              context: context,
+              message: "فشل في ارسال طلب الصيانة ",
+            );
+          }
+        },
         builder: (context, state) {
           return Padding(
             padding: const EdgeInsets.all(8.0),

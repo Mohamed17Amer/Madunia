@@ -5,8 +5,7 @@ import 'package:madunia/features/app/presentation/view/widgets/custom_bottom_nav
 import 'package:madunia/features/app/presentation/view_model/cubit/app_cubit.dart';
 
 class StartingScreen extends StatefulWidget {
-  final index;
-  const StartingScreen({super.key, this.index});
+  const StartingScreen({super.key,});
 
   @override
   State<StartingScreen> createState() => _StartingScreenState();
@@ -37,7 +36,7 @@ class _StartingScreenState extends State<StartingScreen> {
 
               child: BlocBuilder<AppCubit, AppState>(
                 builder: (context, state) {
-                  return AppCubit.pagesViews[widget.index?? AppCubit.currentIndex];
+                  return AppCubit.pagesViews[ AppCubit.currentIndex];
                 },
               ),
             ),

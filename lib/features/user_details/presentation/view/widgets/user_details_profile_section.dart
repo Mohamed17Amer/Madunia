@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:madunia/core/helper/helper_funcs.dart';
 import 'package:madunia/core/utils/widgets/custom_circle_avatar.dart';
-import 'package:madunia/core/utils/widgets/custom_dialog.dart';
-import 'package:madunia/core/utils/widgets/custom_icon.dart';
 import 'package:madunia/core/utils/widgets/custom_txt.dart';
 import 'package:madunia/features/app/data/models/app_user_model.dart';
 

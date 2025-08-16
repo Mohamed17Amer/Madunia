@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:madunia/core/helper/helper_funcs.dart';
+import 'package:madunia/core/utils/router/app_screens.dart';
 import 'package:madunia/core/utils/widgets/custom_app_bar.dart';
 import 'package:madunia/core/utils/widgets/custom_scaffold.dart';
 import 'package:madunia/core/utils/widgets/custom_txt.dart';
@@ -24,13 +26,14 @@ class AuthScreen extends StatelessWidget {
                   children: [
                     SafeArea(child: SizedBox(height: 20)),
                     CustomAppBar(title: "تسجيل دخول باسم المستخدم"),
-            
+
                     SizedBox(height: 20),
                     Expanded(
                       flex: 2,
                       child: CustomTxtFormField(
                         labelText: "اسم المستخدم المميز",
-                        hintText: "الرجاء إدخال اسم المستخدم المُستلم من الأدمن",
+                        hintText:
+                            "الرجاء إدخال اسم المستخدم المُستلم من الأدمن",
                         maxLines: 1,
                         validator: (value) {
                           return context.read<AuthCubit>().validateTxtFormField(
@@ -43,36 +46,66 @@ class AuthScreen extends StatelessWidget {
                             .userNameAuthController,
                       ),
                     ),
-            
-                    Expanded(
-                      flex: 1,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          context.read<AuthCubit>().loginByUserName(
+
+                    BlocConsumer<AuthCubit, AuthState>(
+                      listener: (context, state) {
+                        if (state is LoginByUserNameSuccess) {
+                          showToastification(
                             context: context,
+                            message: "تم تسجيل الدخول بنجاح",
                           );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              Colors.transparent, // Optional: customize color
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 100,
-                            vertical: 8,
+
+                          navigateReplacementWithGoRouter(
+                            context: context,
+                            path: AppScreens.startingScreen,
+                            extra: state.user,
+                          );
+                        } else if (state is LoginByUserNameFailure) {
+                          showToastification(
+                            context: context,
+                            message: '''راجع الاتصال بالانترنت أو راجع الأدمن
+                            لم يتم العثور على المستخدم''',
+                          );
+                        } else if (state is LoginByUserNameLoading) {
+                          Expanded(
+                            flex: 1,
+                            child: Center(child: CircularProgressIndicator()),
+                          );
+                        }
+                      },
+
+                      builder: (context, state) {
+                        return Expanded(
+                          flex: 1,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              context.read<AuthCubit>().loginByUserName(
+                                context: context,
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors
+                                  .transparent, // Optional: customize color
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 100,
+                                vertical: 8,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                  40,
+                                ), // Makes it oval
+                              ),
+                              textStyle: const TextStyle(fontSize: 18),
+                            ),
+                            child: const CustomTxt(
+                              title: "تسجيل الدخول",
+                              fontColor: Colors.white,
+                            ),
                           ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                              40,
-                            ), // Makes it oval
-                          ),
-                          textStyle: const TextStyle(fontSize: 18),
-                        ),
-                        child: const CustomTxt(
-                          title: "تسجيل الدخول",
-                          fontColor: Colors.white,
-                        ),
-                      ),
+                        );
+                      },
                     ),
-            
+
                     Expanded(flex: 4, child: SizedBox(height: 20)),
                   ],
                 ),

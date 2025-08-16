@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madunia/core/utils/colors/app_colors.dart';
-import 'package:madunia/core/utils/widgets/custom_circle_avatar.dart';
 import 'package:madunia/core/utils/widgets/custom_icon.dart';
 import 'package:madunia/core/utils/widgets/custom_txt.dart';
 import 'package:madunia/features/debit_report/data/models/debit_item_model.dart';

@@ -1,8 +1,9 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:madunia/core/helper/helper_funcs.dart';
 import 'package:madunia/core/services/firebase_sevices.dart';
-import 'package:madunia/core/utils/router/app_screens.dart';
 import 'package:madunia/features/app/data/models/app_user_model.dart';
 import 'package:meta/meta.dart';
 
@@ -46,38 +47,22 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> loginByUserName({required BuildContext context}) async {
+    emit(LoginByUserNameLoading());
     final userUniqueName = userNameAuthController.text.trim();
 
+    try {
+      final user = await firestoreService.getUserByName(userUniqueName);
 
-try {
-  final user = await firestoreService.getUserByName(userUniqueName);
-  
-  if (user != null) {
-    // Navigate and show success message here
-    showToastification(
-      context: context,
-      message: "تم تسجيل الدخول بنجاح",
-    );
-    
-      navigateReplacementWithGoRouter(
-        context: context,
-        path: AppScreens.startingScreen,
-        extra: user,
-      );
-      
-  } else {
-    showToastification(
-      context: context,
-      message: "لم يتم العثور على المستخدم",
-    );
-  }
-} catch (e) {
-  showToastification(
-    context: context,
-    message: "خطأ في تسجيل الدخول",
-  );
-}
+      if (user != null) {
+        // Navigate and show success message here
 
-   
+        emit(LoginByUserNameSuccess(user: user));
+      } else {
+        emit(LoginByUserNameFailure(errMessg: "لم يتم العثور على المستخدم"));
+      }
+    } catch (e) {
+      emit(LoginByUserNameFailure(errMessg: e.toString()));
+      log("error in login is   : $e");
+    }
   }
 }
