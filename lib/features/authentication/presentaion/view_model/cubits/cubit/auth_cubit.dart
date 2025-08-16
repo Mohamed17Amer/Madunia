@@ -5,7 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:madunia/core/services/firebase_sevices.dart';
 import 'package:madunia/features/app/data/models/app_user_model.dart';
-import 'package:meta/meta.dart';
+import 'package:madunia/features/app/data/models/user_storage_model.dart';
 
 part 'auth_state.dart';
 
@@ -24,11 +24,9 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  void sendAcquirementReuest({BuildContext? context}) {
+  void sendloginReuest({BuildContext? context}) {
     if (checkRequestValidation()) {
-      ScaffoldMessenger.of(context!).showSnackBar(
-        const SnackBar(content: Text('تم إرسال طلب الصيانة بنجاح')),
-      );
+      loginByUserName(context: context!);
     }
   }
 
@@ -55,14 +53,19 @@ class AuthCubit extends Cubit<AuthState> {
 
       if (user != null) {
         // Navigate and show success message here
-
         emit(LoginByUserNameSuccess(user: user));
+        await UserStorage.saveUser(username: user.uniqueName, userId: user.id);
       } else {
+        resetSettings();
         emit(LoginByUserNameFailure(errMessg: "لم يتم العثور على المستخدم"));
       }
     } catch (e) {
       emit(LoginByUserNameFailure(errMessg: e.toString()));
       log("error in login is   : $e");
     }
+  }
+
+  resetSettings() {
+    userNameAuthController.text = "";
   }
 }

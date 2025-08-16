@@ -2,7 +2,9 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:madunia/core/services/firebase_sevices.dart';
 import 'package:madunia/features/app/data/models/app_user_model.dart';
+import 'package:madunia/features/app/data/models/user_storage_model.dart';
 import 'package:madunia/features/app/presentation/view/widgets/custom_bottom_nav_bar_item.dart';
 import 'package:madunia/features/debit_report/presentation/view/pages/debit_screen.dart';
 import 'package:madunia/features/instructions/presentation/view/pages/annimated_instructions_screen.dart';
@@ -12,15 +14,9 @@ part 'app_state.dart';
 
 class AppCubit extends Cubit<AppState> {
   AppCubit() : super(AppInitial());
+  FirestoreService firestoreService = FirestoreService();
 
-  AppUser user = AppUser(
-    id: "id",
-    uniqueName: "uniqueName",
-    phoneNumber: "phoneNumber",
-    totalDebitMoney: 1,
-    totalMoneyOwed: 1,
-    debitItems: [],
-  );
+  late AppUser user;
 
   static int currentIndex = 0;
 
@@ -57,5 +53,24 @@ class AppCubit extends Cubit<AppState> {
   void changeBottomNavBarIndex(int index) {
     currentIndex = index;
     emit(AppChangeBottomNavBarState(index));
+  }
+
+
+   void checkLoginStatus() async {
+    bool isLoggedIn = await UserStorage.isLoggedIn();
+
+    if (isLoggedIn) {
+      final String? username = await UserStorage.getUsername();
+      //final String? userId = await UserStorage.getUserId();
+        user = (await  firestoreService.getUserByName(username!))! ;
+        emit(CheckIsLoggedSuccess(user));
+
+      // User is logged in, go to home
+     
+    } else {
+      emit(CheckIsLoggedFailure());
+      // User not logged in, go to login
+    
+    }
   }
 }

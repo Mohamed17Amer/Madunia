@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:madunia/core/helper/helper_funcs.dart';
 import 'package:madunia/core/utils/colors/app_colors.dart';
 import 'package:madunia/core/utils/widgets/custom_app_bar.dart';
 import 'package:madunia/core/utils/widgets/custom_txt.dart';
@@ -32,7 +33,8 @@ class _DebitScreenBodyState extends State<DebitScreenBody> {
         slivers: [
           ..._drawHeader(),
 
-          BlocBuilder<DebitReportCubit, DebitReportState>(
+          BlocConsumer<DebitReportCubit, DebitReportState>(
+            listener: (context, state) {},
             builder: (BuildContext context, DebitReportState state) {
               return _drawBody(context, state);
             },
@@ -71,17 +73,16 @@ class _DebitScreenBodyState extends State<DebitScreenBody> {
           child: Center(child: CustomTxt(title: "لم تتم إضافة عناصر بعد.")),
         );
       } else {
-        return DebitSliverList(
-          allUserItemDebits: state.allUserItemDebits,
-          
-        );
+        return DebitSliverList(allUserItemDebits: state.allUserItemDebits);
       }
     } else if (state is GetAllDebitItemsFailure) {
       return SliverFillRemaining(child: Center(child: Text(state.errmesg)));
-    } else {
-      return const SliverFillRemaining(
+    } else if (state is DebitReportLoading) {
+      return SliverFillRemaining(
         child: Center(child: CircularProgressIndicator()),
       );
+    } else {
+      return SliverFillRemaining(child: Center(child: Text("...")));
     }
   }
 }

@@ -79,7 +79,7 @@ class AuthScreen extends StatelessWidget {
                           flex: 1,
                           child: ElevatedButton(
                             onPressed: () {
-                              context.read<AuthCubit>().loginByUserName(
+                              context.read<AuthCubit>().sendloginReuest(
                                 context: context,
                               );
                             },

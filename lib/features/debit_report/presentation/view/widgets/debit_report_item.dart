@@ -55,7 +55,7 @@ class DebitReportItem extends StatelessWidget {
                   onPressed: () {
                     context.read<DebitReportCubit>().sendAcquireToAdmin(
                       context: context,
-                      debitItemId: debitItem!.id,
+                      debitItemTitle: debitItem!.recordName,
                     );
                   },
                   icon: Icons.question_mark_sharp,

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:madunia/core/utils/colors/app_colors.dart';
 
 class AnimatedInstructionsScreen extends StatefulWidget {
   const AnimatedInstructionsScreen({super.key});
@@ -16,7 +17,6 @@ class _AnimatedInstructionsScreenState
   late Timer _timer;
 
   double scrollSpeed = 1.0;
-  
 
   void _startScrolling() {
     _timer = Timer.periodic(const Duration(milliseconds: 30), (timer) {
@@ -48,9 +48,15 @@ class _AnimatedInstructionsScreenState
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return ListView.separated(
       controller: _scrollController,
       itemCount: instructions.length + 2,
+
+      separatorBuilder: (context, index) => Divider(
+        color: AppColors.customAppBarTitleColor,
+        indent: 2.00,
+        height: 2.00,
+      ),
       itemBuilder: (context, index) {
         if (index == 0 || index == instructions.length + 1) {
           return const SizedBox(height: 900); // Top & bottom padding
@@ -83,8 +89,9 @@ class _AnimatedInstructionsScreenState
     "عدم التأخير في سداد فواتير الكهرباء والتليفون الأرضي والإنترنت.",
     "يتم إخبار الأدمن مباشرة مع كل تجديد لباقة الإنترنت لمن يُريد الإشتراك، وإلا سيتم فصل جهازه عن الشبكة بشكل تلقائي.",
     "يتم تحويل أي مبلغ مستحق على نفس رقم الأدمن والمذكور في البند التالي",
-    "+2 010 11 24 56 47",
+    "+2 01011245647",
     " يتم التحويل عن طريق إنستاباي أو فودافون كاش فقط",
     "يتم إرسال سكرين التحويل على الواتس للأدمن",
+    "في حالة إرسال طلب استفسار أو طلب صيانة ولم يتم الرد شفهياً خلال 3 أيام، يقوم المٌرسل بطلب مقابلة الأدمن والمسؤول مباشرةً",
   ];
 }
