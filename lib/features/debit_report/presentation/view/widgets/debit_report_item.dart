@@ -32,8 +32,8 @@ class DebitReportItem extends StatelessWidget {
               ),
 
               // debit item value
-              subtitle: CustomTxt(
-                title: "${debitItem!.recordMoneyValue}جنيه مصري",
+              subtitle: CustomTxt( title: 
+                "${debitItem!.recordMoneyValue}جنيه مصري",
                 fontWeight: FontWeight.bold,
                 fontColor: AppColors.debitReportItemSubTitleColor,
               ),
@@ -49,7 +49,7 @@ class DebitReportItem extends StatelessWidget {
               // send alert
               trailing: CustomIcon(
                 onPressed: () {
-                  context.read<DebitReportCubit>().sendAlarmToUser(
+                  context.read<DebitReportCubit>().sendAcquireToAdmin(
                     context: context,
                     debitItemId: debitItem!.id,
                     userId: userId,

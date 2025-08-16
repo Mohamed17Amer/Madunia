@@ -16,7 +16,7 @@ class UserDetailsScreen extends StatefulWidget {
 }
 
 class _UserDetailsScreenState extends State<UserDetailsScreen> {
-  late AppUser? user =(context).read<AppCubit>().user;
+  late AppUser? user = (context).read<AppCubit>().user;
 
   @override
   void initState() {
@@ -53,7 +53,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
     return <Widget>[
       SliverToBoxAdapter(child: SafeArea(child: SizedBox(height: 20))),
       SliverToBoxAdapter(child: UserDetailsProfileSection(user: user)),
-      SliverToBoxAdapter(child: SizedBox(height: 20)),
+      SliverToBoxAdapter(child: SizedBox(height: 5)),
     ];
   }
 
@@ -63,6 +63,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
         UserPaymentDetailsCardsGridView(user: user, totals: state.total),
         SizedBox(height: 5),
         UserOtherDetailsCardsGridView(user: user),
+        SizedBox(height: 10),
       ];
     } else {
       return [const Center(child: CircularProgressIndicator())];

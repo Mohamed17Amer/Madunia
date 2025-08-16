@@ -14,7 +14,7 @@ class AppCubit extends Cubit<AppState> {
   AppCubit() : super(AppInitial());
 
   AppUser user = AppUser(
-    id: "11",
+    id: "id",
     uniqueName: "uniqueName",
     phoneNumber: "phoneNumber",
     totalDebitMoney: 1,

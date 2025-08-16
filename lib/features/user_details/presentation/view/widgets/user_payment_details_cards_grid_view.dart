@@ -21,6 +21,7 @@ class UserPaymentDetailsCardsGridView extends StatelessWidget {
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () {
+            /*
             if (index == 0) {
               navigateToWithGoRouter(
                 context: context,
@@ -28,7 +29,10 @@ class UserPaymentDetailsCardsGridView extends StatelessWidget {
                 extra: user,
 
               );
+              
             }
+
+            */
           },
 
           child: UserDetailsCardItem(

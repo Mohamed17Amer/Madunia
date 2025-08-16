@@ -29,6 +29,7 @@ class UserDetailsProfileSection extends StatelessWidget {
           const SizedBox(height: 5),
           CustomTxt(title: user!.phoneNumber, fontWeight: FontWeight.bold),
           const SizedBox(height: 5),
+      /*
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -67,6 +68,7 @@ class UserDetailsProfileSection extends StatelessWidget {
               ),
             ],
           ),
+          */
         ],
       ),
     );

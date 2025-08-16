@@ -38,12 +38,12 @@ class DebitReportCubit extends Cubit<DebitReportState> {
 
   ///************************************* HELPERS **************************************** */
 
-  sendAlarmToUser({
+  sendAcquireToAdmin({
     required BuildContext context,
     required String debitItemId,
     required String userId,
   }) {
-    showToastification(context: context, message: "تم إرسال تنبيه للدفع");
+    showToastification(context: context, message: "تم إرسال طلب استفسار");
 
     // emit(SendAlarmToUserSuccess());
   }

@@ -1,7 +1,10 @@
 class AppScreens {
 
   //static const String onboarding = '/';
-  static const String startingScreen = '/';
+  static const String authScreen = '/';
+ // static const String authScreen = '/auth';
+
+  static const String startingScreen = '/starting';
   static const String userDetailsScreen = '/user_details';
   static const String homeScreen = '/home';
   static const String debitScreen = '/debit';

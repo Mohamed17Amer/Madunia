@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madunia/core/utils/colors/app_colors.dart';
+import 'package:madunia/features/app/data/models/app_user_model.dart';
 import 'package:madunia/features/app/presentation/view/widgets/custom_bottom_nav_bar.dart';
 import 'package:madunia/features/app/presentation/view_model/cubit/app_cubit.dart';
 
 class StartingScreen extends StatefulWidget {
-  const StartingScreen({super.key});
+  final AppUser user;
+  const StartingScreen({super.key, required this.user});
 
   @override
   State<StartingScreen> createState() => _StartingScreenState();
 }
 
 class _StartingScreenState extends State<StartingScreen> {
-  AppCubit appCubit = AppCubit();
+  @override
+  void initState() {
+    super.initState();
+    (context).read<AppCubit>().user = widget.user;
+  }
   @override
   Widget build(BuildContext context) {
     return Directionality(
