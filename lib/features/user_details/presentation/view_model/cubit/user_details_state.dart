@@ -19,3 +19,18 @@ final class GetTotalMoneySuccess extends UserDetailsState {
   @override
   List<Object?> get props => [total];
 }
+
+final class GetTotalMoneyFailure extends UserDetailsState {
+  final String errMesg;
+  const GetTotalMoneyFailure({required this.errMesg});
+
+  @override
+  List<Object?> get props => [errMesg];
+}
+
+final class GetTotalMoneyLoading extends UserDetailsState {
+  const GetTotalMoneyLoading();
+
+  @override
+  List<Object?> get props => [];
+}

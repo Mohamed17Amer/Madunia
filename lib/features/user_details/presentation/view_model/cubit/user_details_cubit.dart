@@ -15,6 +15,7 @@ class UserDetailsCubit extends Cubit<UserDetailsState> {
   final userOtherDrtailsCategoriess = ["البلاغات"];
 
   getTotalMoney({required String userId}) async {
+    emit(GetTotalMoneyLoading());
     final List<double> total = [0, 0];
     total[0] = await firestoreService.getTotalDebitMoney(userId);
     total[1] = await firestoreService.getTotalOwnedMoney(userId);

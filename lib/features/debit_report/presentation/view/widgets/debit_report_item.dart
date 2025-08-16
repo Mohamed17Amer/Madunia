@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madunia/core/utils/colors/app_colors.dart';
+import 'package:madunia/core/utils/widgets/custom_circle_avatar.dart';
 import 'package:madunia/core/utils/widgets/custom_icon.dart';
 import 'package:madunia/core/utils/widgets/custom_txt.dart';
 import 'package:madunia/features/debit_report/data/models/debit_item_model.dart';
@@ -8,11 +9,9 @@ import 'package:madunia/features/debit_report/presentation/view_model/cubits/deb
 
 class DebitReportItem extends StatelessWidget {
   final DebitItem? debitItem;
-  final String userId;
   const DebitReportItem({
     super.key,
     required this.debitItem,
-    required this.userId,
   });
 
   @override
@@ -43,19 +42,25 @@ class DebitReportItem extends StatelessWidget {
                 onPressed: () {
                   
                 },
-                icon: Icons.check,
+                icon: Icons.money_off,
               ),
 
               // send alert
-              trailing: CustomIcon(
-                onPressed: () {
-                  context.read<DebitReportCubit>().sendAcquireToAdmin(
-                    context: context,
-                    debitItemId: debitItem!.id,
-                    userId: userId,
-                  );
-                },
-                icon: Icons.add_alert_outlined,
+              trailing: CircleAvatar(
+                radius: 30,
+                backgroundColor: Colors.transparent.withOpacity(0.1),
+              //  foregroundColor: Colors.transparent,
+                
+              
+                child: CustomIcon(
+                  onPressed: () {
+                    context.read<DebitReportCubit>().sendAcquireToAdmin(
+                      context: context,
+                      debitItemId: debitItem!.id,
+                    );
+                  },
+                  icon: Icons.question_mark_sharp,
+                ),
               ),
             ),
           ),

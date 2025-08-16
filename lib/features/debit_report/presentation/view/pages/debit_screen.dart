@@ -15,20 +15,23 @@ class DebitScreen extends StatefulWidget {
 
 class _DebitScreenState extends State<DebitScreen> {
   late AppUser user;
+late String userId;
 
   @override
   void initState() {
     super.initState();
     user = (context).read<AppCubit>().user;
+    userId = (context).read<AppCubit>().user.id;
+
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          DebitReportCubit()..getAllDebitItems(userId: user.id),
+          DebitReportCubit()..getAllDebitItems(userId:userId),
 
-      child: CustomScaffold(body: DebitScreenBody(user: user)),
+      child: CustomScaffold(body: DebitScreenBody()),
     );
   }
 }

@@ -20,8 +20,8 @@ class UserDetailsCardItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return UserDetailsCardItemContainer(
       itemBody: (flag == "payment")
-          ? UserPaymentDetailsCardItemBody(user: user!, index: index!, total: total)
-          : UserOtherDetailsCardItemBody(user: user!, index: index!),
+          ? UserPaymentDetailsCardItemBody( index: index!, total: total)
+          : UserOtherDetailsCardItemBody( index: index!),
     );
   }
 }
