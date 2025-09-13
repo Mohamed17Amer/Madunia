@@ -1,0 +1,72 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:madunia/core/utils/widgets/custom_scaffold.dart';
+import 'package:madunia/features/app/data/models/app_user_model.dart';
+import 'package:madunia/features/app/presentation/view_model/cubit/app_cubit.dart';
+import 'package:madunia/features/user_details/presentation/view/widgets/user_details_profile_section.dart';
+import 'package:madunia/features/user_details/presentation/view/widgets/user_other_details_cards_grid_view.dart';
+import 'package:madunia/features/user_details/presentation/view/widgets/user_payment_details_cards_grid_view.dart';
+import 'package:madunia/features/user_details/presentation/view_model/cubit/user_details_cubit.dart';
+
+class UserDetailsScreen extends StatefulWidget {
+  const UserDetailsScreen({super.key});
+
+  @override
+  State<UserDetailsScreen> createState() => _UserDetailsScreenState();
+}
+
+class _UserDetailsScreenState extends State<UserDetailsScreen> {
+  late AppUser? user = (context).read<AppCubit>().user;
+
+  @override
+  void initState() {
+    super.initState();
+    user = (context).read<AppCubit>().user;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => UserDetailsCubit()..getTotalMoney(userId: user!.id),
+
+      child: CustomScaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: CustomScrollView(
+            slivers: [
+              ..._drawHeader(),
+              BlocBuilder<UserDetailsCubit, UserDetailsState>(
+                builder: (context, state) {
+                  return SliverList(
+                    delegate: SliverChildListDelegate(_drawBody(state)),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<Widget> _drawHeader() {
+    return <Widget>[
+      SliverToBoxAdapter(child: SafeArea(child: SizedBox(height: 20))),
+      SliverToBoxAdapter(child: UserDetailsProfileSection(user: user)),
+      SliverToBoxAdapter(child: SizedBox(height: 5)),
+    ];
+  }
+
+  List<Widget> _drawBody(UserDetailsState state) {
+    if (state is GetTotalMoneySuccess) {
+      return [
+        UserPaymentDetailsCardsGridView(user: user, totals: state.total),
+        SizedBox(height: 5),
+        UserOtherDetailsCardsGridView(user: user),
+        SizedBox(height: 10),
+      ];
+    } else {
+      return [const Center(child: CircularProgressIndicator())];
+    }
+  }
+}

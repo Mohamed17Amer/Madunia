@@ -11,6 +11,7 @@ class AppColors {
   ];
   static const bottomNavBarBackgroundColor = Color(0xFF35333b);
   static const bottomNavBarSelectedItemColor = Color(0xFFc5d955);
+   static const  customAppBarTitleColor = Color(0xFFc5d955);
   static const iconsOutlinesDefaultColor = Color(0xFFFFFFFF);
   static const homeAppBarIconsBackgroundColor = Color(0xFF1d1d28);
   static const homeFilterationItemsBackgroundColor = Color(0xFF1c1c29);
@@ -19,6 +20,10 @@ class AppColors {
   static const bodySelectedTxtColor = Color(0xFF3d4424);
   static const homeShortsBackgroundColor = Color(0xFFd29ef1);
   static const homePlayShortsIconColor = Color(0xFF44125b);
+
+  static const debitReportItemTitleColor =Color.fromARGB(255, 198, 214, 21);
+
+  static const debitReportItemSubTitleColor =Color.fromARGB(255, 13, 13, 161);
 
   // static const
 
