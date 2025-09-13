@@ -6,7 +6,7 @@ class AppUser {
   final String uniqueName;
   final String phoneNumber;
   final double totalDebitMoney;
-  final double totalMoneyOwed;
+  final double totalOwnedMoney;
   final List<DebitItem> debitItems; // New attribute
 
   AppUser({
@@ -14,7 +14,7 @@ class AppUser {
     required this.uniqueName,
     required this.phoneNumber,
     required this.totalDebitMoney,
-    required this.totalMoneyOwed,
+    required this.totalOwnedMoney,
     required this.debitItems,
   });
 
@@ -28,7 +28,7 @@ class AppUser {
       uniqueName: map['uniqueName'] ?? '',
       phoneNumber: map['phoneNumber'] ?? '',
       totalDebitMoney: (map['totalDebitMoney'] ?? 0.0).toDouble(),
-      totalMoneyOwed: (map['totalMoneyOwed'] ?? 0.0).toDouble(),
+      totalOwnedMoney: (map['totalOwnedMoney'] ?? 0.0).toDouble(),
       debitItems: debitItems,
     );
   }
@@ -38,7 +38,7 @@ class AppUser {
       'uniqueName': uniqueName,
       'phoneNumber': phoneNumber,
       'totalDebitMoney': totalDebitMoney,
-      'totalMoneyOwed': totalMoneyOwed,
+      'totalOwnedMoney': totalOwnedMoney,
     };
 
     if (includeDebitItems) {

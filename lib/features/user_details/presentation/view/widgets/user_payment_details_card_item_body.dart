@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madunia/core/helper/helper_funcs.dart';
-import 'package:madunia/core/services/firebase_sevices.dart';
 import 'package:madunia/core/utils/widgets/custom_icon.dart';
 import 'package:madunia/core/utils/widgets/custom_txt.dart';
 import 'package:madunia/features/user_details/presentation/view_model/cubit/user_details_cubit.dart';
@@ -10,7 +9,7 @@ class UserPaymentDetailsCardItemBody extends StatefulWidget {
   final int? index;
   final double? total;
 
-  UserPaymentDetailsCardItemBody({super.key, this.index, required this.total});
+  const UserPaymentDetailsCardItemBody({super.key, this.index, required this.total});
 
   @override
   State<UserPaymentDetailsCardItemBody> createState() =>
@@ -20,7 +19,6 @@ class UserPaymentDetailsCardItemBody extends StatefulWidget {
 class _UserPaymentDetailsCardItemBodyState
     extends State<UserPaymentDetailsCardItemBody> {
   late String categoryName;
-  FirestoreService firestoreService = FirestoreService();
 
   @override
   void initState() {

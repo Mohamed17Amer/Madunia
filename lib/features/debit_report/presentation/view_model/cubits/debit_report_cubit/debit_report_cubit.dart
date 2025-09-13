@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madunia/core/helper/helper_funcs.dart';
-import 'package:madunia/core/services/firebase_sevices.dart';
+import 'package:madunia/core/services/firebase/firestore/debit_service.dart';
 import 'package:madunia/features/app/presentation/view_model/cubit/app_cubit.dart';
 import 'package:madunia/features/debit_report/data/models/debit_item_model.dart';
 import 'package:mailer/mailer.dart';
@@ -14,7 +14,7 @@ part 'debit_report_state.dart';
 class DebitReportCubit extends Cubit<DebitReportState> {
   DebitReportCubit() : super(DebitReportInitial());
 
-  FirestoreService firestoreService = FirestoreService();
+  DebitService firestoreService = DebitService();
 
   ///******************************* GET ******************************************** */
 

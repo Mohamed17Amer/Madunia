@@ -6,7 +6,7 @@ import 'package:madunia/features/authentication/presentaion/view/pages/auth_scre
 import 'package:madunia/features/debit_report/presentation/view/pages/debit_screen.dart';
 import 'package:madunia/features/instructions/presentation/view/pages/annimated_instructions_screen.dart';
 import 'package:madunia/features/repair_request/presentation/view/pages/repair_request_screen.dart';
-import 'package:madunia/features/splash_screen/presentation/view/pages/spash_screen.dart';
+import 'package:madunia/features/splash_screen/presentation/view/pages/splash_screen.dart';
 import 'package:madunia/features/user_details/presentation/view/pages/user_details_screen.dart';
 
 abstract class AppRouter {

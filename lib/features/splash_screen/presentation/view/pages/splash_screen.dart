@@ -6,6 +6,8 @@ import 'package:madunia/core/utils/widgets/custom_scaffold.dart';
 import 'package:madunia/features/app/presentation/view_model/cubit/app_cubit.dart';
 
 class SplashScreen extends StatelessWidget {
+  const SplashScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
