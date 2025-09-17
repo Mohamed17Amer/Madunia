@@ -17,7 +17,7 @@ class _StartingScreenState extends State<StartingScreen> {
   @override
   void initState() {
     super.initState();
-    (context).read<AppCubit>().user = widget.user;
+    (context).read<AppCubit>().currentUser = widget.user;
   }
   @override
   Widget build(BuildContext context) {

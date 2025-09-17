@@ -16,7 +16,7 @@ class AppCubit extends Cubit<AppState> {
   AppCubit() : super(AppInitial());
   UserService firestoreService = UserService();
 
-  late AppUser user;
+  late AppUser currentUser;
 
   static int currentIndex = 0;
 
@@ -62,8 +62,8 @@ class AppCubit extends Cubit<AppState> {
     if (isLoggedIn) {
       final String? username = await UserStorage.getUsername();
       //final String? userId = await UserStorage.getUserId();
-        user = (await  firestoreService.getUserByName(username!))! ;
-        emit(CheckIsLoggedSuccess(user));
+        currentUser = (await  firestoreService.getUserByName(username!))! ;
+        emit(CheckIsLoggedSuccess(currentUser));
 
       // User is logged in, go to home
      

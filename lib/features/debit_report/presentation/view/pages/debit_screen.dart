@@ -20,8 +20,8 @@ late String userId;
   @override
   void initState() {
     super.initState();
-    user = (context).read<AppCubit>().user;
-    userId = (context).read<AppCubit>().user.id;
+    user = (context).read<AppCubit>().currentUser;
+    userId = (context).read<AppCubit>().currentUser.id;
 
   }
 

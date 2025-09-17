@@ -16,12 +16,12 @@ class UserDetailsScreen extends StatefulWidget {
 }
 
 class _UserDetailsScreenState extends State<UserDetailsScreen> {
-  late AppUser? user = (context).read<AppCubit>().user;
+  late AppUser? user = (context).read<AppCubit>().currentUser;
 
   @override
   void initState() {
     super.initState();
-    user = (context).read<AppCubit>().user;
+    user = (context).read<AppCubit>().currentUser;
   }
 
   @override

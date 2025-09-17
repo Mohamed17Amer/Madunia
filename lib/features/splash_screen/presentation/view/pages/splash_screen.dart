@@ -17,7 +17,7 @@ class SplashScreen extends StatelessWidget {
             navigateReplacementWithGoRouter(
               context: context,
               path: AppScreens.startingScreen,
-              extra: state.user,
+              extra: state.currentUser,
             );
           } else {
             navigateReplacementWithGoRouter(

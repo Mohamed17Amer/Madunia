@@ -12,14 +12,7 @@ import 'package:madunia/features/user_details/presentation/view/pages/user_detai
 abstract class AppRouter {
   static final router = GoRouter(
     routes: [
-      /*
-      GoRoute(
-        path: AppScreens.onboarding,
-        builder: (context, state) {
-          return Container();
-        },
-      ),
-*/
+  
       GoRoute(
         path: AppScreens.splashScreen,
         builder: (context, state) {

@@ -21,7 +21,7 @@ class _DebitScreenBodyState extends State<DebitScreenBody> {
   @override
   void initState() {
     super.initState();
-    user = (context).read<AppCubit>().user;
+    user = (context).read<AppCubit>().currentUser;
   }
 
   @override

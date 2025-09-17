@@ -31,11 +31,11 @@ final class CheckIsLoggedLoading extends AppState {
 }
 
 final class CheckIsLoggedSuccess extends AppState {
-  final AppUser user;
-  const CheckIsLoggedSuccess(this.user);
+  final AppUser currentUser;
+  const CheckIsLoggedSuccess(this.currentUser);
 
   @override
-  List<Object?> get props => [user];
+  List<Object?> get props => [currentUser];
 
 }
 

@@ -62,7 +62,7 @@ class RepairRequestCubit extends Cubit<RepairRequestState> {
 
     // sender person
 
-    final String userUniqueName = (context).read<AppCubit>().user.uniqueName;
+    final String userUniqueName = (context).read<AppCubit>().currentUser.uniqueName;
 
     // receiver person
     final String recipientEmail = "mo17amer@gmail.com";
