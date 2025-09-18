@@ -9,4 +9,8 @@ class AppScreens {
   static const String repairRequestScreen = '/repair';
   static const String animatedInstructionsScreen = '/instructions';
 
+  static const String selectChatWaysScreen = '/chat_ways';
+  static const String groupChatScreen = '/group_chat';
+  static const String individualChatScreen = '/individual_chat';
+
 }

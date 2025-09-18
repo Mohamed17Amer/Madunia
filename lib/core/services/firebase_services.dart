@@ -5,6 +5,7 @@ export 'firebase/user_service.dart';
 export 'firebase/firestore/debit_service.dart';
 export 'firebase/firestore/owned_service.dart';
 export 'firebase/firestore/firestore_debit_monthly_service.dart';
+export 'firebase/firestore/firestore_chat.dart';
 
 
 /*

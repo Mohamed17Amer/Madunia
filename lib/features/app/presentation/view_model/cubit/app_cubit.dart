@@ -6,6 +6,7 @@ import 'package:madunia/core/services/firebase/user_service.dart';
 import 'package:madunia/features/app/data/models/app_user_model.dart';
 import 'package:madunia/features/app/data/models/user_storage_model.dart';
 import 'package:madunia/features/app/presentation/view/widgets/custom_bottom_nav_bar_item.dart';
+import 'package:madunia/features/chat/presentation/view/pages/select_chat_ways_screen.dart';
 import 'package:madunia/features/debit_report/presentation/view/pages/debit_screen.dart';
 import 'package:madunia/features/instructions/presentation/view/pages/annimated_instructions_screen.dart';
 import 'package:madunia/features/repair_request/presentation/view/pages/repair_request_screen.dart';
@@ -17,6 +18,8 @@ class AppCubit extends Cubit<AppState> {
   UserService firestoreService = UserService();
 
   late AppUser currentUser;
+  late String currentUserId;
+  late String currentUsername;
 
   static int currentIndex = 0;
 
@@ -24,6 +27,7 @@ class AppCubit extends Cubit<AppState> {
     UserDetailsScreen(),
     DebitScreen(),
     RepairRequestScreen(),
+    SelectChatWaysScreen(),
     AnimatedInstructionsScreen(),
   ];
 
@@ -43,10 +47,15 @@ class AppCubit extends Cubit<AppState> {
       pageName: 'Repair Request',
       pageIndex: 2,
     ),
+     CustomBottomNavBarItem(
+      pageIcon: Icons.chat,
+      pageName: 'chat ways',
+      pageIndex: 3,
+    ),
     CustomBottomNavBarItem(
       pageIcon: Icons.integration_instructions,
       pageName: 'Sustainable instructions',
-      pageIndex: 3,
+      pageIndex: 4,
     ),
   ];
 
@@ -60,9 +69,9 @@ class AppCubit extends Cubit<AppState> {
     bool isLoggedIn = await UserStorage.isLoggedIn();
 
     if (isLoggedIn) {
-      final String? username = await UserStorage.getUsername();
-      //final String? userId = await UserStorage.getUserId();
-        currentUser = (await  firestoreService.getUserByName(username!))! ;
+       currentUsername = (await UserStorage.getUsername())!;
+       currentUserId = (await UserStorage.getUserId())!;
+        currentUser = (await  firestoreService.getUserByName(currentUsername!))! ;
         emit(CheckIsLoggedSuccess(currentUser));
 
       // User is logged in, go to home

@@ -3,6 +3,8 @@ import 'package:madunia/core/utils/router/app_screens.dart';
 import 'package:madunia/features/app/data/models/app_user_model.dart';
 import 'package:madunia/features/app/presentation/pages/starting_screen.dart';
 import 'package:madunia/features/authentication/presentaion/view/pages/auth_screen.dart';
+import 'package:madunia/features/chat/presentation/view/pages/group_chat_screen.dart';
+import 'package:madunia/features/chat/presentation/view/pages/select_chat_ways_screen.dart';
 import 'package:madunia/features/debit_report/presentation/view/pages/debit_screen.dart';
 import 'package:madunia/features/instructions/presentation/view/pages/annimated_instructions_screen.dart';
 import 'package:madunia/features/repair_request/presentation/view/pages/repair_request_screen.dart';
@@ -60,6 +62,20 @@ abstract class AppRouter {
         path: AppScreens.animatedInstructionsScreen,
         builder: (context, state) {
           return AnimatedInstructionsScreen();
+        },
+      ),
+
+         GoRoute(
+        path: AppScreens.selectChatWaysScreen,
+        builder: (context, state) {
+          return SelectChatWaysScreen();
+        },
+      ),
+
+         GoRoute(
+        path: AppScreens.groupChatScreen,
+        builder: (context, state) {
+          return GroupChatScreen();
         },
       ),
     ],

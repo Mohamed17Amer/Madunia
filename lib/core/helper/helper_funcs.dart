@@ -1,7 +1,11 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:madunia/core/utils/router/app_screens.dart';
+import 'package:madunia/features/chat/presentation/view/pages/group_chat_screen.dart';
+import 'package:madunia/features/chat/presentation/view_model/cubit/chat_cubit.dart';
 import 'package:toastification/toastification.dart';
 
 // generate unique codes
@@ -67,8 +71,23 @@ void navigateToWithGoRouter({
   required String path,
   dynamic extra,
 }) {
-  context.push(path, extra: extra);
+  
+  if (path==AppScreens.groupChatScreen) {
+        final chatCubit = context.read<ChatCubit>();
+Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => BlocProvider.value(
+      value: context.read<ChatCubit>(),
+      child: GroupChatScreen(),
+    ),
+  ),
+);
 
+    }
+
+    
+  context.push(path, extra: extra);
 }
 
 void navigateReplacementWithGoRouter({
